@@ -34,6 +34,7 @@
     "qs": "^6.11.2"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.10",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "ansi-regex": "^6.0.1",
