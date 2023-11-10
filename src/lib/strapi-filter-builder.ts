@@ -191,6 +191,15 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
+  in(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string[]) {
+    this.url = this._generateFilter({
+      field,
+      operator: 'in',
+      value,
+    });
+    return this;
+  }
+
   /**
    *
    * @param path relation path as string type.  Ex - 'subcategories.products.slug'
