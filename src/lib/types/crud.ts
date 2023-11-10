@@ -32,12 +32,12 @@ export type RelationalFilterOperators =
   | 'endsWith';
 
 export type CrudFilter<T> = {
-  field: keyof T;
+  field: Extract<keyof T, string>;
   operator: CrudOperators;
   value: string | number | Array<string | number>;
 };
 export type CrudSort<T = any> = {
-  field: keyof T;
+  field: Extract<keyof T, string>;
   order?: 'asc' | 'desc';
 };
 

@@ -56,7 +56,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     });
   }
 
-  equalTo(field: keyof InferedTypeFromArray<T>, value: string | number) {
+  equalTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
     this.url = this._generateFilter({
       field,
       operator: 'eq',
@@ -65,7 +65,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  notEqualTo(field: keyof InferedTypeFromArray<T>, value: string | number) {
+  notEqualTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
     this.url = this._generateFilter({
       field,
       operator: 'ne',
@@ -74,7 +74,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  lessThan(field: keyof InferedTypeFromArray<T>, value: string | number) {
+  lessThan(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
     this.url = this._generateFilter({
       field,
       operator: 'lt',
@@ -83,7 +83,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  lessThanOrEqualTo(field: keyof InferedTypeFromArray<T>, value: string | number) {
+  lessThanOrEqualTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
     this.url = this._generateFilter({
       field,
       operator: 'lte',
@@ -92,7 +92,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  greaterThan(field: keyof InferedTypeFromArray<T>, value: string | number) {
+  greaterThan(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
     this.url = this._generateFilter({
       field,
       operator: 'gt',
@@ -101,7 +101,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  greaterThanOrEqualTo(field: keyof InferedTypeFromArray<T>, value: string | number) {
+  greaterThanOrEqualTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
     this.url = this._generateFilter({
       field,
       operator: 'gte',
@@ -110,7 +110,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  containsCaseSensitive(field: keyof InferedTypeFromArray<T>, value: string) {
+  containsCaseSensitive(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'contains',
@@ -119,7 +119,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  notContainsCaseSensitive(field: keyof InferedTypeFromArray<T>, value: string) {
+  notContainsCaseSensitive(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'notContains',
@@ -128,7 +128,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  contains(field: keyof InferedTypeFromArray<T>, value: string) {
+  contains(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'containsi',
@@ -137,7 +137,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  notContains(field: keyof InferedTypeFromArray<T>, value: string) {
+  notContains(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'notContainsi',
@@ -146,7 +146,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  isNull(field: keyof InferedTypeFromArray<T>, value: string) {
+  isNull(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'null',
@@ -155,7 +155,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  isNotNull(field: keyof InferedTypeFromArray<T>, value: string) {
+  isNotNull(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'notNull',
@@ -164,7 +164,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  between(field: keyof InferedTypeFromArray<T>, value: Array<any>) {
+  between(field: Extract<keyof InferedTypeFromArray<T>, string>, value: Array<any>) {
     this.url = this._generateFilter({
       field,
       operator: 'between',
@@ -173,7 +173,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  startsWith(field: keyof InferedTypeFromArray<T>, value: string) {
+  startsWith(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'startsWith',
@@ -182,7 +182,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  endsWith(field: keyof InferedTypeFromArray<T>, value: string) {
+  endsWith(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
     this.url = this._generateFilter({
       field,
       operator: 'endsWith',

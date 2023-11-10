@@ -18,7 +18,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "tsc",
     "dev": "nodemon --config nodemon.json src/example/play.ts",
     "lint": "eslint  . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
@@ -30,33 +30,29 @@
       "pre-commit": "npm run prettier-format && npm run lint"
     }
   },
-  "peerDependencies": {
-    "axios": "^0.26.0",
-    "qs": "^6.10.3"
+  "dependencies": {
+    "axios": "^1.6.1",
+    "qs": "^6.11.2"
   },
   "devDependencies": {
-    "@types/node": "^16.9.4",
-    "@types/qs": "^6.9.7",
-    "@typescript-eslint/eslint-plugin": "^5.12.1",
-    "@typescript-eslint/parser": "^5.12.1",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
     "ansi-regex": "^6.0.1",
-    "axios": "^0.26.0",
     "cz-conventional-changelog": "^3.3.0",
-    "esbuild": "^0.14.23",
-    "eslint": "^8.9.0",
+    "esbuild": "^0.19.5",
+    "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.4.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.4",
-    "nodemon": "^2.0.12",
-    "prettier": "^2.5.1",
-    "qs": "^6.10.3",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.68.0",
-    "rollup-plugin-dts": "^4.1.0",
-    "rollup-plugin-esbuild": "^4.8.2",
-    "semantic-release": "^19.0.2",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "eslint-plugin-prettier": "^5.0.1",
+    "husky": "^8.0.3",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.3",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.3.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-esbuild": "^6.1.0",
+    "semantic-release": "^22.0.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   },
   "config": {
     "commitizen": {
@@ -66,6 +62,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kmariappan/strapi-client-js.git"
-  },
-  "dependencies": {}
+  }
 }
