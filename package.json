@@ -1,5 +1,5 @@
 {
-  "name": "@kmariappan/strapi-client-js",
+  "name": "@pokemon-sleep-ui/strapi-client-js",
   "packageManager": "yarn@4.1.0",
   "author": "Karthikeyan Mariappan",
   "contributors": [
@@ -44,7 +44,6 @@
     }
   },
   "dependencies": {
-    "axios": "^1.6.1",
     "qs": "^6.11.2"
   },
   "devDependencies": {

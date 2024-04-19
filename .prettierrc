@@ -1,9 +1,25 @@
 {
   "singleQuote": true,
-  "semi": false,
+  "semi": true,
+  "useTabs": false,
   "trailingComma": "all",
-  "arrowParens": "avoid",
-  "endOfLine": "auto",
-  "printWidth": 200,
-  "tabWidth": 2
+  "tabWidth": 2,
+  "printWidth": 80,
+  "endOfLine": "lf",
+  "insertPragma": false,
+  "jsxSingleQuote": true,
+  "arrowParens": "always",
+  "quoteProps": "preserve",
+  "bracketSpacing": false,
+  "bracketSameLine": false,
+  "htmlWhitespaceSensitivity": "css",
+  "singleAttributePerLine": true,
+  "overrides": [
+    {
+      "files": ["*.yml", "*.json"],
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
 }
