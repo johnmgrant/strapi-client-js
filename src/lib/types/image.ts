@@ -1,4 +1,4 @@
-import { StrapiUnifiedResponse } from './base';
+import {StrapiUnifiedResponse} from './base';
 
 export type ImageUnifiedResponse = StrapiUnifiedResponse<StrapiImage>;
 

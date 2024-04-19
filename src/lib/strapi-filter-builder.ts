@@ -1,25 +1,37 @@
-import { AxiosInstance } from 'axios';
-import { generateQueryString, generateQueryFromRawString, stringToArray } from './helpers';
-import { StrapiClientHelper } from './strapi-client-helper';
-import { InferedTypeFromArray, PublicationState, StrapiApiResponse } from './types/base';
-import { CrudSorting, PopulateDeepOptions, RelationalFilterOperators } from './types/crud';
+import {
+  generateQueryString,
+  generateQueryFromRawString,
+  stringToArray,
+} from './helpers';
+import {StrapiClientHelper} from './strapi-client-helper';
+import {
+  InferedTypeFromArray,
+  PublicationState,
+  StrapiApiResponse,
+} from './types/base';
+import {
+  CrudSorting,
+  PopulateDeepOptions,
+  RelationalFilterOperators,
+} from './types/crud';
+import {HttpClient} from './service/http';
 
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
-  private httpClient: AxiosInstance;
+  private httpClient: HttpClient;
   private normalizeData: boolean;
   private debug: boolean;
 
   constructor(
     url: string,
-    axiosInstance: AxiosInstance,
+    clientInstance: HttpClient,
     normalizeData: boolean,
     debug: boolean,
-    private isNotUserContent: boolean
+    private isNotUserContent: boolean,
   ) {
     super(url);
     this.debug = debug;
     this.url = url;
-    this.httpClient = axiosInstance;
+    this.httpClient = clientInstance;
     this.normalizeData = normalizeData;
   }
 
@@ -33,7 +45,9 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
         this.httpClient
           .get<StrapiApiResponse<T>>(this.url)
           .then((res) => {
-            resolve(this.normalizeData ? this._returnDataHandler(res.data) : res.data);
+            resolve(
+              this.normalizeData ? this._returnDataHandler(res.data) : res.data,
+            );
           })
           .catch((err) => {
             if (err) {
@@ -45,7 +59,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
         this.httpClient
           .get<T>(this.url)
           .then((res) => {
-            resolve({ data: res.data, meta: undefined });
+            resolve({data: res.data, meta: undefined});
           })
           .catch((err) => {
             if (err) {
@@ -56,7 +70,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     });
   }
 
-  equalTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
+  equalTo(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string | number,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'eq',
@@ -65,7 +82,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  notEqualTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
+  notEqualTo(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string | number,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'ne',
@@ -74,7 +94,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  lessThan(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
+  lessThan(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string | number,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'lt',
@@ -83,7 +106,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  lessThanOrEqualTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
+  lessThanOrEqualTo(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string | number,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'lte',
@@ -92,7 +118,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  greaterThan(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
+  greaterThan(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string | number,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'gt',
@@ -101,7 +130,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  greaterThanOrEqualTo(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string | number) {
+  greaterThanOrEqualTo(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string | number,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'gte',
@@ -110,7 +142,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  containsCaseSensitive(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
+  containsCaseSensitive(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'contains',
@@ -119,7 +154,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  notContainsCaseSensitive(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
+  notContainsCaseSensitive(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'notContains',
@@ -128,7 +166,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  contains(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
+  contains(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'containsi',
@@ -137,7 +178,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  notContains(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
+  notContains(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'notContainsi',
@@ -155,7 +199,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  isNotNull(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
+  isNotNull(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'notNull',
@@ -164,7 +211,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  between(field: Extract<keyof InferedTypeFromArray<T>, string>, value: Array<any>) {
+  between(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: Array<any>,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'between',
@@ -173,7 +223,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  startsWith(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
+  startsWith(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'startsWith',
@@ -182,7 +235,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  endsWith(field: Extract<keyof InferedTypeFromArray<T>, string>, value: string) {
+  endsWith(
+    field: Extract<keyof InferedTypeFromArray<T>, string>,
+    value: string,
+  ) {
     this.url = this._generateFilter({
       field,
       operator: 'endsWith',
@@ -207,8 +263,16 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
    * @param value values can be string, number or array
    * @returns
    */
-  filterDeep(path: string, operator: RelationalFilterOperators, value: string | number | Array<string | number>) {
-    this.url = this._genrateRelationsFilter({ path: stringToArray(path), operator, value });
+  filterDeep(
+    path: string,
+    operator: RelationalFilterOperators,
+    value: string | number | Array<string | number>,
+  ) {
+    this.url = this._genrateRelationsFilter({
+      path: stringToArray(path),
+      operator,
+      value,
+    });
     return this;
   }
 
@@ -260,7 +324,9 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
    * @returns retrieve only draft entries
    */
   onlyDraft() {
-    this.url = this._handleUrl(`publicationState=${PublicationState.PREVIEW}&filters[publishedAt][$null]=true`);
+    this.url = this._handleUrl(
+      `publicationState=${PublicationState.PREVIEW}&filters[publishedAt][$null]=true`,
+    );
     return this;
   }
 
@@ -295,7 +361,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   populateWith<Q>(
     relation: T extends Array<infer U> ? keyof U : keyof T,
     selectFields?: Array<keyof Q>,
-    level2?: boolean
+    level2?: boolean,
   ) {
     const obj = {
       populate: {

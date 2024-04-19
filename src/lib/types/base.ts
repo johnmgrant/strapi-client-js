@@ -10,7 +10,7 @@ export type StrapiClientOptions = {
   debug?: boolean;
   normalizeData?: boolean;
   apiToken?: string;
-  headers?: { [key: string]: string };
+  headers?: {[key: string]: string};
   persistSession?: boolean;
   localStorage?: SupportedStorage;
 };
@@ -45,7 +45,9 @@ export type StrapiUnifiedResponse<T> = {
 export type InferedTypeFromArray<T> = T extends Array<infer U> ? U : T;
 
 export type StrapiPopulatedResponse<T> = {
-  data: T extends Array<infer U> ? Array<StrapiUnifiedResponse<U>> : StrapiUnifiedResponse<T>;
+  data: T extends Array<infer U>
+    ? Array<StrapiUnifiedResponse<U>>
+    : StrapiUnifiedResponse<T>;
 };
 
 export type StrapiTimestamp = {
@@ -64,7 +66,11 @@ type AnyFunction = (...args: any[]) => any;
 type MaybePromisify<T> = T | Promise<T>;
 
 type PromisifyMethods<T> = {
-  [K in keyof T]: T[K] extends AnyFunction ? (...args: Parameters<T[K]>) => MaybePromisify<ReturnType<T[K]>> : T[K];
+  [K in keyof T]: T[K] extends AnyFunction
+    ? (...args: Parameters<T[K]>) => MaybePromisify<ReturnType<T[K]>>
+    : T[K];
 };
 
-export type SupportedStorage = PromisifyMethods<Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>>;
+export type SupportedStorage = PromisifyMethods<
+  Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>
+>;

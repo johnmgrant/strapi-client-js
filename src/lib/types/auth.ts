@@ -1,4 +1,4 @@
-import { StrapiApiError } from './base';
+import {StrapiApiError} from './base';
 
 export type AuthenticationResponse = {
   data: AuthData | null;

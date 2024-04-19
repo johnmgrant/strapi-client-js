@@ -1,12 +1,23 @@
-import { AxiosInstance } from 'axios';
-import { StrapiApiError, StrapiApiResponse, StrapiClientOptions, SupportedStorage } from './types/base';
+import {
+  StrapiApiError,
+  StrapiApiResponse,
+  StrapiClientOptions,
+  SupportedStorage,
+} from './types/base';
 
-import { AuthData, Session, SignInCredentials, SignUpCredentials, User } from './types/auth';
+import {
+  AuthData,
+  Session,
+  SignInCredentials,
+  SignUpCredentials,
+  User,
+} from './types/auth';
 
-import { EndPoint, STORAGE_KEY } from './constants';
-import { polyfillGlobalThis } from './helpers/polyfills';
-import { isBrowser } from './helpers';
-import { StrapiClientHelper } from './strapi-client-helper';
+import {EndPoint, STORAGE_KEY} from './constants';
+import {polyfillGlobalThis} from './helpers/polyfills';
+import {isBrowser} from './helpers';
+import {StrapiClientHelper} from './strapi-client-helper';
+import {HttpClient} from './service/http';
 
 polyfillGlobalThis(); // Make "globalThis" available
 
@@ -17,7 +28,7 @@ const DEFAULT_OPTIONS = {
 };
 
 export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
-  private httpClient: AxiosInstance;
+  private httpClient: HttpClient;
 
   protected localStorage: SupportedStorage;
   protected autoRefreshToken: boolean;
@@ -32,10 +43,10 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
    */
   protected currentSession: Session | null;
 
-  constructor(axiosInstance: AxiosInstance, options: StrapiClientOptions) {
-    const settings = { ...DEFAULT_OPTIONS, ...options };
+  constructor(clientInstance: HttpClient, options: StrapiClientOptions) {
+    const settings = {...DEFAULT_OPTIONS, ...options};
     super(settings.url);
-    this.httpClient = axiosInstance;
+    this.httpClient = clientInstance;
     this.currentUser = null;
     this.currentSession = null;
     this.autoRefreshToken = settings.autoRefreshToken;
@@ -48,7 +59,9 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
    * @param credentials email and password
    * @returns data and error objects, data object contains jwt, user and provider
    */
-  public signIn(credentials: SignInCredentials): Promise<StrapiApiResponse<AuthData>> {
+  public signIn(
+    credentials: SignInCredentials,
+  ): Promise<StrapiApiResponse<AuthData>> {
     return new Promise<StrapiApiResponse<AuthData>>((resolve) => {
       this.httpClient
         .post<AuthData>(EndPoint.auth.signIn, {
@@ -78,12 +91,14 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
    * @returns data and error objects, data object contains jwt, user and provider
    */
 
-  public async signUp(credentials: SignUpCredentials): Promise<StrapiApiResponse<AuthData>> {
+  public async signUp(
+    credentials: SignUpCredentials,
+  ): Promise<StrapiApiResponse<AuthData>> {
     return new Promise<StrapiApiResponse<AuthData>>((resolve) => {
       this.httpClient
         .post<AuthData>(EndPoint.auth.signUp, credentials)
         .then((res) => {
-          resolve({ data: res.data });
+          resolve({data: res.data});
           this._saveSession({
             access_token: res.data.jwt,
             user: res.data.user,
@@ -108,7 +123,7 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
       this.httpClient
         .get<User>(EndPoint.auth.getMe)
         .then((res) => {
-          resolve({ data: res.data });
+          resolve({data: res.data});
         })
         .catch((err: any) => {
           if (err) {
@@ -128,14 +143,14 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
    *
    * For server-side management, you can disable sessions by passing a JWT through to `auth.api.signOut(JWT: string)`
    */
-  async signOut(): Promise<{ error: StrapiApiError | null }> {
+  async signOut(): Promise<{error: StrapiApiError | null}> {
     const accessToken = this.currentSession?.access_token;
     this._removeSession();
     if (accessToken) {
       // const { error } = await this.api.signOut(accessToken);
       //  if (error) return { error };
     }
-    return { error: null };
+    return {error: null};
   }
 
   /**
@@ -158,7 +173,7 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
   }
 
   private _persistSession(currentSession: Session) {
-    const data = { currentSession, expiresAt: currentSession.expires_at };
+    const data = {currentSession, expiresAt: currentSession.expires_at};
     isBrowser() && this.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 }

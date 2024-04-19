@@ -1,7 +1,16 @@
-import { InferedTypeFromArray, StrapiApiError, StrapiApiResponse } from './types/base';
-import { CrudFilter, CrudSorting, DeepFilterType, PopulateDeepOptions } from './types/crud';
-import { parse, stringify } from 'qs';
-import { generateQueryString, stringToArray } from './helpers';
+import {
+  InferedTypeFromArray,
+  StrapiApiError,
+  StrapiApiResponse,
+} from './types/base';
+import {
+  CrudFilter,
+  CrudSorting,
+  DeepFilterType,
+  PopulateDeepOptions,
+} from './types/crud';
+import {parse, stringify} from 'qs';
+import {generateQueryString, stringToArray} from './helpers';
 
 export abstract class StrapiClientHelper<T> {
   protected url: string;
@@ -11,7 +20,8 @@ export abstract class StrapiClientHelper<T> {
   }
 
   private _normalizeData(data: any): any {
-    const isObject = (data: any) => Object.prototype.toString.call(data) === '[object Object]';
+    const isObject = (data: any) =>
+      Object.prototype.toString.call(data) === '[object Object]';
 
     const flatten = (data: any) => {
       if (!data.attributes) return data;
@@ -30,7 +40,7 @@ export abstract class StrapiClientHelper<T> {
       if (Array.isArray(data.data)) {
         data = [...data.data];
       } else if (isObject(data.data)) {
-        data = flatten({ ...data.data });
+        data = flatten({...data.data});
       } else if (data.data === null) {
         data = null;
       } else {
@@ -47,7 +57,9 @@ export abstract class StrapiClientHelper<T> {
     return data;
   }
 
-  protected _returnDataHandler(data: StrapiApiResponse<T>): StrapiApiResponse<T> {
+  protected _returnDataHandler(
+    data: StrapiApiResponse<T>,
+  ): StrapiApiResponse<T> {
     const response: StrapiApiResponse<T> = {
       data: this._normalizeData(data.data) as T,
       meta: data.meta,
@@ -60,7 +72,7 @@ export abstract class StrapiClientHelper<T> {
     let error: StrapiApiError = {
       status: null,
       message: null,
-      details: null,
+      details: err,
       name: null,
     };
 
@@ -68,7 +80,7 @@ export abstract class StrapiClientHelper<T> {
       error.status = err.code;
       error.message = `The given url ${err.config.baseURL} is incorrect or invalid `;
       error.name = err.syscall;
-    } else {
+    } else if (err.response?.data) {
       if (!err.response.data.error) {
         error.status = err.response.status as number;
         error.message = err.response.statusText;
@@ -85,7 +97,11 @@ export abstract class StrapiClientHelper<T> {
     return response;
   }
 
-  protected _generateFilter({ field, operator, value }: CrudFilter<InferedTypeFromArray<T>>): string {
+  protected _generateFilter({
+    field,
+    operator,
+    value,
+  }: CrudFilter<InferedTypeFromArray<T>>): string {
     let rawQuery = '';
     if (Array.isArray(value)) {
       value.map((val) => {
@@ -100,7 +116,7 @@ export abstract class StrapiClientHelper<T> {
 
   protected _genrateRelationsFilter(deepFilter: DeepFilterType) {
     let rawQuery = `filters`;
-    const { path: fields, operator, value } = deepFilter;
+    const {path: fields, operator, value} = deepFilter;
     if (Array.isArray(fields)) {
       fields.map((field) => {
         rawQuery += `[${field}]`;
@@ -134,7 +150,7 @@ export abstract class StrapiClientHelper<T> {
         sort.push(`${item.field}`);
       }
     });
-    return this._handleUrl(generateQueryString({ sort }));
+    return this._handleUrl(generateQueryString({sort}));
   }
 
   protected _handleUrl(query: string): string {

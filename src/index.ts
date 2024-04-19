@@ -1,5 +1,5 @@
-import { StrapiClient } from './lib/strapi-client';
-import { StrapiClientOptions } from './lib/types/base';
+import {StrapiClient} from './lib/strapi-client';
+import {StrapiClientOptions} from './lib/types/base';
 
 const defaultOptions: StrapiClientOptions = {
   url: '',
@@ -23,15 +23,15 @@ const defaultOptions: StrapiClientOptions = {
  *
  */
 const createClient = (options: StrapiClientOptions): StrapiClient => {
-  return new StrapiClient({ ...defaultOptions, ...options });
+  return new StrapiClient({...defaultOptions, ...options});
 };
 
-export { createClient, StrapiClient };
+export {createClient, StrapiClient};
 export type {
   StrapiUnifiedResponse,
   StrapiTimestamp,
   StrapiPopulatedResponse,
   StrapiClientOptions,
 } from './lib/types/base';
-export type { SignInCredentials, SignUpCredentials } from './lib/types/auth';
-export type { StrapiImage } from './lib/types/image';
+export type {SignInCredentials, SignUpCredentials} from './lib/types/auth';
+export type {StrapiImage} from './lib/types/image';
