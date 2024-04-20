@@ -1,7 +1,13 @@
 {
   "name": "@pokemon-sleep-ui/strapi-client-js",
-  "packageManager": "yarn@4.1.0",
+  "description": "Javascript client for Strapi Rest API",
+  "packageManager": "yarn@4.1.1",
+  "version": "1.0.0",
   "author": "Karthikeyan Mariappan",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnmgrant/strapi-client-js.git"
+  },
   "contributors": [
     {
       "name": "RaenonX",
@@ -12,68 +18,60 @@
       "email": "jgrant_dev@icloud.com"
     }
   ],
-  "description": "Javascript client for Strapi Rest API",
-  "version": "1.0.0-development",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "license": "MIT",
-  "engines": {
-    "node": "^20.10",
-    "npm": "^9.5.1"
-  },
+  "type": "module",
   "files": [
     "dist",
     "src"
   ],
-  "publishConfig": {
-    "access": "public"
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
+      "default": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "source": "./src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": "^20.10",
+    "npm": "^9.5.1"
   },
   "scripts": {
-    "build": "tsc",
-    "postinstall": "tsc",
-    "dev": "nodemon --config nodemon.json src/example/play.ts",
-    "lint": "eslint . --ext .ts",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "semantic-release": "semantic-release --branches main",
-    "commit": "git-cz"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn run prettier-format && yarn run lint"
-    }
+    "dev": "rimraf dist && rollup --config --watch",
+    "build": "rimraf dist && cross-env NODE_ENV=production rollup --config --compact",
+    "lint": "eslint src --ext ts,tsx,js,jsx,cjs,mjs",
+    "typecheck": "tsc"
   },
   "dependencies": {
-    "qs": "^6.11.2"
+    "axios": "^1.6.8"
   },
   "devDependencies": {
-    "@types/qs": "^6.9.10",
-    "@typescript-eslint/eslint-plugin": "^6.10.0",
-    "@typescript-eslint/parser": "^6.10.0",
-    "ansi-regex": "^6.0.1",
-    "cz-conventional-changelog": "^3.3.0",
-    "esbuild": "^0.19.5",
-    "eslint": "^8.0.0",
-    "eslint-config-prettier": "^8.4.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "husky": "^8.0.3",
-    "nodemon": "^3.0.1",
-    "prettier": "^3.0.3",
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-swc": "^0.3.0",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@swc/core": "^1.4.16",
+    "@types/node": "^20.12.7",
+    "@types/qs": "^6.9.15",
+    "ajv": "^8.12.0",
+    "cross-env": "^7.0.3",
     "rimraf": "^5.0.5",
-    "rollup": "^4.3.0",
+    "rollup": "^4.16.0",
     "rollup-plugin-dts": "^6.1.0",
-    "rollup-plugin-esbuild": "^6.1.0",
-    "semantic-release": "^22.0.7",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "type-fest": "^4.15.0",
+    "typescript": "^5.4.5"
   },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kmariappan/strapi-client-js.git"
+  "peerDependencies": {
+    "qs": ">=6.12.1"
   }
 }

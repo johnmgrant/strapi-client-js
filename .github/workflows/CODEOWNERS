@@ -1,0 +1,9 @@
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# --- Global code owner
+*   @johnmgrant
+*   @raenonx
+
+# --- Code owner file self protection
+# Doc: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#codeowners-and-branch-protection
+/.github/ @johnmgrant
