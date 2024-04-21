@@ -1,4 +1,5 @@
-import axios, { InternalAxiosRequestConfig, AxiosInstance } from 'axios';
+import axios, {InternalAxiosRequestConfig, AxiosInstance} from 'axios';
+
 
 export const getAxiosInstance = (url: string, apiToken?: string): AxiosInstance => {
   const API = axios.create();

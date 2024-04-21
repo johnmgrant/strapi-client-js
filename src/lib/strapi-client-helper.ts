@@ -1,7 +1,9 @@
-import { InferedTypeFromArray, StrapiApiError, StrapiApiResponse } from './types/base';
-import { CrudFilter, CrudSorting, DeepFilterType, PopulateDeepOptions } from './types/crud';
-import { parse, stringify } from 'qs';
-import { generateQueryString, stringToArray } from './helpers';
+import {parse, stringify} from 'qs';
+
+import {generateQueryString, stringToArray} from './helpers';
+import {InferedTypeFromArray, StrapiApiError, StrapiApiResponse} from './types/base';
+import {CrudFilter, CrudSorting, DeepFilterType, PopulateDeepOptions} from './types/crud';
+
 
 export abstract class StrapiClientHelper<T> {
   protected url: string;
@@ -30,7 +32,7 @@ export abstract class StrapiClientHelper<T> {
       if (Array.isArray(data.data)) {
         data = [...data.data];
       } else if (isObject(data.data)) {
-        data = flatten({ ...data.data });
+        data = flatten({...data.data});
       } else if (data.data === null) {
         data = null;
       } else {
@@ -38,7 +40,9 @@ export abstract class StrapiClientHelper<T> {
       }
 
       for (const key in data) {
-        data[key] = this._normalizeData(data[key]);
+        if (Object.hasOwn(data, key)) {
+          data[key] = this._normalizeData(data[key]);
+        }
       }
 
       return data;
@@ -85,7 +89,7 @@ export abstract class StrapiClientHelper<T> {
     return response;
   }
 
-  protected _generateFilter({ field, operator, value }: CrudFilter<InferedTypeFromArray<T>>): string {
+  protected _generateFilter({field, operator, value}: CrudFilter<InferedTypeFromArray<T>>): string {
     let rawQuery = '';
     if (Array.isArray(value)) {
       value.map((val) => {
@@ -100,7 +104,7 @@ export abstract class StrapiClientHelper<T> {
 
   protected _genrateRelationsFilter(deepFilter: DeepFilterType) {
     let rawQuery = `filters`;
-    const { path: fields, operator, value } = deepFilter;
+    const {path: fields, operator, value} = deepFilter;
     if (Array.isArray(fields)) {
       fields.map((field) => {
         rawQuery += `[${field}]`;
@@ -134,7 +138,7 @@ export abstract class StrapiClientHelper<T> {
         sort.push(`${item.field}`);
       }
     });
-    return this._handleUrl(generateQueryString({ sort }));
+    return this._handleUrl(generateQueryString({sort}));
   }
 
   protected _handleUrl(query: string): string {
@@ -148,7 +152,7 @@ export abstract class StrapiClientHelper<T> {
   }
 
   protected _generatePopulateDeep(options: PopulateDeepOptions[]) {
-    let url_string = '';
+    let urlString = '';
     options.map((q) => {
       const manipulatedPath = stringToArray(q.path);
       let partialQuery = '';
@@ -160,15 +164,15 @@ export abstract class StrapiClientHelper<T> {
 
       if (q.fields) {
         q.fields.map((field, i) => {
-          url_string +=
-            i === 0 && url_string === ''
-              ? `${partialQuery}[fields][${i}]=${field}`
-              : `&${partialQuery}[fields][${i}]=${field}`;
+          urlString +=
+            i === 0 && urlString === '' ?
+              `${partialQuery}[fields][${i}]=${field}` :
+              `&${partialQuery}[fields][${i}]=${field}`;
         });
       }
 
       if (q.children === '*') {
-        url_string += `&${partialQuery}[populate]=%2A`;
+        urlString += `&${partialQuery}[populate]=%2A`;
       }
 
       if (q.children && q.children !== '*') {
@@ -176,18 +180,18 @@ export abstract class StrapiClientHelper<T> {
         let someQuery = '';
         q.children.map((child) => {
           if (!child.fields) {
-            url_string += `&${partialQuery2}[populate][${child.key}]=%2A`;
+            urlString += `&${partialQuery2}[populate][${child.key}]=%2A`;
           } else {
             child.fields.map((field, ind) => {
               someQuery += `&${partialQuery2}[populate][${child.key}][fields][${ind}]=${field}`;
             });
           }
 
-          url_string += `${someQuery}`;
+          urlString += `${someQuery}`;
         });
       }
     });
 
-    return this._handleUrl(stringify(parse(url_string)));
+    return this._handleUrl(stringify(parse(urlString)));
   }
 }

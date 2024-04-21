@@ -1,3 +1,4 @@
+/* eslint-disable no-extend-native */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
@@ -8,7 +9,7 @@ export function polyfillGlobalThis() {
   if (typeof globalThis === 'object') return;
   try {
     Object.defineProperty(Object.prototype, '__magic__', {
-      get: function () {
+      get: function() {
         return this;
       },
       configurable: true,

@@ -32,30 +32,31 @@ export type RelationalFilterOperators =
   | 'endsWith';
 
 export type CrudFilter<T> = {
-  field: Extract<keyof T, string>;
-  operator: CrudOperators;
-  value: string | number | Array<string | number>;
+  field: Extract<keyof T, string>,
+  operator: CrudOperators,
+  value: string | number | Array<string | number>,
 };
+
 export type CrudSort<T = any> = {
-  field: Extract<keyof T, string>;
-  order?: 'asc' | 'desc';
+  field: Extract<keyof T, string>,
+  order?: 'asc' | 'desc',
 };
 
 export type DeepFilterType = {
-  path: Array<string>;
-  operator: RelationalFilterOperators;
-  value: string | number | Array<string | number>;
+  path: Array<string>,
+  operator: RelationalFilterOperators,
+  value: string | number | Array<string | number>,
 };
 
 type DeepChild = {
-  key: string;
-  fields?: string[];
+  key: string,
+  fields?: string[],
 };
 
 export type PopulateDeepOptions = {
-  path: string;
-  fields?: string[];
-  children?: DeepChild[] | '*';
+  path: string,
+  fields?: string[],
+  children?: DeepChild[] | '*',
 };
 
 export declare type CrudSorting<T = any> = CrudSort<T>[];

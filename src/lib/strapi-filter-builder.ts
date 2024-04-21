@@ -1,8 +1,10 @@
-import { AxiosInstance } from 'axios';
-import { generateQueryString, generateQueryFromRawString, stringToArray } from './helpers';
-import { StrapiClientHelper } from './strapi-client-helper';
-import { InferedTypeFromArray, PublicationState, StrapiApiResponse } from './types/base';
-import { CrudSorting, PopulateDeepOptions, RelationalFilterOperators } from './types/crud';
+import {AxiosInstance} from 'axios';
+
+import {generateQueryString, generateQueryFromRawString, stringToArray} from './helpers';
+import {StrapiClientHelper} from './strapi-client-helper';
+import {InferedTypeFromArray, PublicationState, StrapiApiResponse} from './types/base';
+import {CrudSorting, PopulateDeepOptions, RelationalFilterOperators} from './types/crud';
+
 
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   private httpClient: AxiosInstance;
@@ -14,7 +16,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     axiosInstance: AxiosInstance,
     normalizeData: boolean,
     debug: boolean,
-    private isNotUserContent: boolean
+    private isNotUserContent: boolean,
   ) {
     super(url);
     this.debug = debug;
@@ -45,7 +47,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
         this.httpClient
           .get<T>(this.url)
           .then((res) => {
-            resolve({ data: res.data, meta: undefined });
+            resolve({data: res.data, meta: undefined});
           })
           .catch((err) => {
             if (err) {
@@ -200,84 +202,43 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  /**
-   *
-   * @param path relation path as string type.  Ex - 'subcategories.products.slug'
-   * @param operator "eq" | "ne" | "lt" | "gt" | "lte" | "gte" | "in" | "notIn" | "contains" | "notContains" | "startsWith" | "endsWith"
-   * @param value values can be string, number or array
-   * @returns
-   */
   filterDeep(path: string, operator: RelationalFilterOperators, value: string | number | Array<string | number>) {
-    this.url = this._genrateRelationsFilter({ path: stringToArray(path), operator, value });
+    this.url = this._genrateRelationsFilter({path: stringToArray(path), operator, value});
     return this;
   }
 
-  /**
-   *
-   * @param sort expects an array with the field and order example - [{ field: 'id', order: 'asc' }]
-   *
-   */
   sortBy(sort: CrudSorting<InferedTypeFromArray<T>>) {
     this.url = this._generateSort(sort);
     return this;
   }
 
-  /**
-   *
-   * @param page Page number
-   * @param pageSize 	Page size
-   * @returns Pagination by page
-   */
   paginate(page: number, pageSize: number) {
     const paginateRawQuery = `pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
     this.url = this._handleUrl(generateQueryFromRawString(paginateRawQuery));
     return this;
   }
 
-  /**
-   *
-   * @param start Start value (i.e. first entry to return)
-   * @param limit Number of entries to return
-   * @returns Pagination by offset
-   */
   paginateByOffset(start: number, limit: number) {
     const paginateRawQuery = `pagination[start]=${start}&pagination[limit]=${limit}`;
     this.url = this._handleUrl(generateQueryFromRawString(paginateRawQuery));
     return this;
   }
 
-  /**
-   *
-   * @returns returns both draft entries & published entries
-   */
   withDraft() {
     this.url = this._handleUrl(`publicationState=${PublicationState.PREVIEW}`);
     return this;
   }
 
-  /**
-   *
-   * @returns retrieve only draft entries
-   */
   onlyDraft() {
     this.url = this._handleUrl(`publicationState=${PublicationState.PREVIEW}&filters[publishedAt][$null]=true`);
     return this;
   }
 
-  /**
-   *
-   * @param localeCode expects string locale-code
-   * @returns returns content only for a specified locale
-   */
   setLocale(localeCode: string) {
     this.url = this._handleUrl(`locale=${localeCode}`);
     return this;
   }
 
-  /**
-   *
-   * @returns Populate 1 level for all relations
-   */
   populate() {
     const obj = {
       populate: '*',
@@ -286,16 +247,10 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  /**
-   * @param key relation name
-   * @param selectFields an Array of field names to populate
-   * @param level2 expects boolean value to To populate second-level deep for all relations
-   */
-
   populateWith<Q>(
     relation: T extends Array<infer U> ? keyof U : keyof T,
     selectFields?: Array<keyof Q>,
-    level2?: boolean
+    level2?: boolean,
   ) {
     const obj = {
       populate: {
@@ -309,17 +264,6 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     return this;
   }
 
-  /**
-   *
-   * @param populateDeepValues expects an array with the path, fields and children
-   * @type path: string
-   *
-   * @type fields: Array of strings
-   * 
-   * @type children : Array [key:string, fields:Array of strings]
-  
-   * @returns Populate n level for the specified relation
-   */
   populateDeep(populateDeepValues: PopulateDeepOptions[]) {
     this.url = this._generatePopulateDeep(populateDeepValues);
     return this;

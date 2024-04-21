@@ -1,8 +1,10 @@
-import { AxiosInstance } from 'axios';
-import { StrapiAuthClient } from './strapi-auth-client';
-import { getAxiosInstance } from './service/http';
-import { StrapiClientOptions } from './types/base';
-import { StrapiQueryBuilder } from './strapi-query-builder';
+import {AxiosInstance} from 'axios';
+
+import {getAxiosInstance} from './service/http';
+import {StrapiAuthClient} from './strapi-auth-client';
+import {StrapiQueryBuilder} from './strapi-query-builder';
+import {StrapiClientOptions} from './types/base';
+
 
 export class StrapiClient {
   private httpClient: AxiosInstance;
@@ -22,21 +24,12 @@ export class StrapiClient {
 
   auth: StrapiAuthClient;
 
-  /**
-   * Perform a model operation.
-   *
-   * @param name The model name to operate on.
-   */
   from<T = any>(contentName: string): StrapiQueryBuilder<T> {
     contentName === 'users' ? (this.isNotUserContent = false) : (this.isNotUserContent = true);
     const url = `${this.options.url}/${contentName}`;
     return new StrapiQueryBuilder<T>(url, this.httpClient, this.isNotUserContent, this.normalizeData, this.debug);
   }
 
-  /**
-   *
-   * @returns The registered Api URL
-   */
   getApiUrl(): string {
     return this.options.url;
   }

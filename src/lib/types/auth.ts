@@ -1,19 +1,20 @@
-import { StrapiApiError } from './base';
+import {StrapiApiError} from './base';
+
 
 export type AuthenticationResponse = {
-  data: AuthData | null;
-  error?: StrapiApiError;
+  data: AuthData | null,
+  error?: StrapiApiError,
 };
 
 export type SignInCredentials = {
-  email: string;
-  password: string;
+  email: string,
+  password: string,
 };
 
 export type SignUpCredentials = {
-  username: string;
-  email: string;
-  password: string;
+  username: string,
+  email: string,
+  password: string,
 };
 
 export type Provider =
@@ -34,32 +35,32 @@ export type Provider =
   | 'vk';
 
 export type User = {
-  id: number;
-  username: string;
-  email: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  createdAt: string;
-  updatedAt: string;
+  id: number,
+  username: string,
+  email: string,
+  provider: string,
+  confirmed: boolean,
+  blocked: boolean,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type AuthData = {
-  jwt: 'string';
-  user: User | null;
-  provider?: Provider;
+  jwt: 'string',
+  user: User | null,
+  provider?: Provider,
 };
 
 export interface Session {
-  access_token: string;
-  user: User | null;
+  access_token: string,
+  user: User | null,
   /**
    * The number of seconds until the token expires (since it was issued). Returned when a login is confirmed.
    */
-  expires_in?: number;
+  expires_in?: number,
   /**
    * A timestamp of when the token will expire. Returned when a login is confirmed.
    */
-  expires_at?: number;
-  refresh_token?: string;
+  expires_at?: number,
+  refresh_token?: string,
 }

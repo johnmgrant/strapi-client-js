@@ -1,12 +1,15 @@
-import { AxiosInstance } from 'axios';
-import { generateQueryString } from './helpers';
-import { StrapiClientHelper } from './strapi-client-helper';
-import { StrapiFilterBuilder } from './strapi-filter-builder';
-import { StrapiApiResponse } from './types/base';
+import {AxiosInstance} from 'axios';
+
+import {generateQueryString} from './helpers';
+import {StrapiClientHelper} from './strapi-client-helper';
+import {StrapiFilterBuilder} from './strapi-filter-builder';
+import {StrapiApiResponse} from './types/base';
+
 
 type PostValuesType<T> = {
-  data: T;
+  data: T,
 };
+
 export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
   private httpClient: AxiosInstance;
   private isNotUserContent: boolean;
@@ -17,7 +20,7 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
     axiosInstance: AxiosInstance,
     isNotUserContent: boolean,
     normalizeData: boolean,
-    debug: boolean
+    debug: boolean,
   ) {
     super(url);
     this.debug = debug;
@@ -47,15 +50,10 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
       this.httpClient,
       this.normalizData,
       this.debug,
-      this.isNotUserContent
+      this.isNotUserContent,
     );
   }
 
-  /**
-   *
-   * @param ids Array of string or number values to select many records.
-   * @returns selected contents.
-   */
   selectManyByID(ids: string[] | number[]): StrapiFilterBuilder<T[]> {
     if (ids) {
       const query = ids?.map((item: string | number) => `filters[id][$in]=${item}`).join('&');
@@ -68,15 +66,10 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
       this.httpClient,
       this.normalizData,
       this.debug,
-      this.isNotUserContent
+      this.isNotUserContent,
     );
   }
 
-  /**
-   *
-   * @param values The values to create a new record.
-   * @returns By default the new record is returned.
-   */
   async create(values: T): Promise<StrapiApiResponse<T>> {
     return new Promise<StrapiApiResponse<T>>((resolve) => {
       this.httpClient
@@ -92,17 +85,12 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
     });
   }
 
-  /**
-   *
-   * @param values objects of values to create many records.
-   * @returns return boolean value if the process on success
-   */
-  async createMany(values: T[]): Promise<{ success: true }> {
+  async createMany(values: T[]): Promise<{success: true}> {
     await Promise.all(
       values.map(async (value): Promise<StrapiApiResponse<T>> => {
-        const { data } = await this.httpClient.post<StrapiApiResponse<T>>(this.url, this._handleValues(value));
+        const {data} = await this.httpClient.post<StrapiApiResponse<T>>(this.url, this._handleValues(value));
         return Promise.resolve(data);
-      })
+      }),
     ).catch((error) => {
       if (error) {
         this._returnErrorHandler(error);
@@ -113,11 +101,6 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
     });
   }
 
-  /**
-   *
-   * @param values The values to update an existing record.
-   * @returns By default the new record is returned.
-   */
   async update(id: string | number, values: Partial<T>): Promise<StrapiApiResponse<T>> {
     const url = `${this.url}/${id}`;
     return new Promise<StrapiApiResponse<T>>((resolve) => {
@@ -134,19 +117,14 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
     });
   }
 
-  /**
-   *
-   * @param values objects of values to update many records.
-   * @returns return boolean value if the process on success
-   */
-  async updateMany(values: { id: string | number; variables: Partial<T> }[]): Promise<{ success: true }> {
+  async updateMany(values: {id: string | number; variables: Partial<T>}[]): Promise<{success: true}> {
     await Promise.all(
       values.map(async (value): Promise<StrapiApiResponse<T>> => {
         const url = `${this.url}/${value.id}`;
 
-        const { data } = await this.httpClient.put<StrapiApiResponse<T>>(url, this._handleValues(value.variables));
+        const {data} = await this.httpClient.put<StrapiApiResponse<T>>(url, this._handleValues(value.variables));
         return Promise.resolve(data);
-      })
+      }),
     ).catch((error) => {
       if (error) {
         this._returnErrorHandler(error);
@@ -157,11 +135,6 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
     });
   }
 
-  /**
-   *
-   * @param value The value to delete an record.
-   * @returns By default the deleted record is returned.
-   */
   async deleteOne(id: string | number): Promise<StrapiApiResponse<T>> {
     const url = `${this.url}/${id}`;
     return new Promise<StrapiApiResponse<T>>((resolve) => {
@@ -178,22 +151,13 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
     });
   }
 
-  /**
-   *
-   * @param values Array of string or number values to delete many records.
-   * @returns return boolean value if the process on success
-   */
-  async deleteMany(ids: string[] | number[]): Promise<{ success: true }> {
+  async deleteMany(ids: string[] | number[]): Promise<{success: true}> {
     await Promise.all(
       ids.map(async (id) => {
-        const { data } = await this.httpClient.delete(`${this.url}/${id}`);
+        const {data} = await this.httpClient.delete(`${this.url}/${id}`);
         return data;
-      })
-    ).catch((err) => {
-      if (err) {
-        return this._returnErrorHandler(err);
-      }
-    });
+      }),
+    ).catch((err) => this._returnErrorHandler(err));
 
     return Promise.resolve({
       success: true,
