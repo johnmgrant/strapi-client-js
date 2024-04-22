@@ -1,4 +1,5 @@
 import axios, {InternalAxiosRequestConfig, AxiosInstance} from 'axios';
+import {addAxiosDateTransformer} from 'axios-date-transformer';
 
 
 export const getAxiosInstance = (url: string, apiToken?: string): AxiosInstance => {
@@ -15,5 +16,5 @@ export const getAxiosInstance = (url: string, apiToken?: string): AxiosInstance 
 
   API.interceptors.request.use(axiosConfig);
 
-  return API;
+  return addAxiosDateTransformer(API);
 };

@@ -22,3 +22,7 @@ export type {
 export type {SignInCredentials, SignUpCredentials} from './lib/types/auth';
 
 export type {StrapiImage} from './lib/types/image';
+
+export * from './lib/strapi-query-builder';
+
+export * from './lib/strapi-filter-builder';

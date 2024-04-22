@@ -14,7 +14,9 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
   private httpClient: AxiosInstance;
   private isNotUserContent: boolean;
   protected normalizData: boolean;
+  private isSingle: boolean;
   private debug: boolean;
+
   constructor(
     url: string,
     axiosInstance: AxiosInstance,
@@ -24,33 +26,41 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
   ) {
     super(url);
     this.debug = debug;
+    this.isSingle = true;
     this.normalizData = normalizeData;
     this.url = `${url}`;
     this.isNotUserContent = isNotUserContent;
     this.httpClient = axiosInstance;
   }
 
-  /**
-   *
-   * @param fields Array of string to select the fields.
-   * @returns collection of requested contents.
-   */
-
-  select(fields?: Array<keyof T>): StrapiFilterBuilder<T[]> {
+  select(): StrapiFilterBuilder<T>;
+  select(fields?: Array<keyof T>): StrapiFilterBuilder<T[]>;
+  select(fields?: Array<keyof T> | string): StrapiFilterBuilder<T | T[]> {
     if (fields) {
       const query = {
         fields,
       };
       const queryString = generateQueryString(query);
       this.url = `${this.url}?${queryString}`;
+      this.isSingle = false;
+
+      return new StrapiFilterBuilder<T[]>(
+        this.url,
+        this.httpClient,
+        this.normalizData,
+        this.debug,
+        this.isNotUserContent,
+        this.isSingle,
+      );
     }
 
-    return new StrapiFilterBuilder<T[]>(
+    return new StrapiFilterBuilder<T>(
       this.url,
       this.httpClient,
       this.normalizData,
       this.debug,
       this.isNotUserContent,
+      this.isSingle,
     );
   }
 
@@ -67,6 +77,7 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
       this.normalizData,
       this.debug,
       this.isNotUserContent,
+      this.isSingle,
     );
   }
 

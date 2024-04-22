@@ -6,6 +6,8 @@ import {InferedTypeFromArray, PublicationState, StrapiApiResponse} from './types
 import {CrudSorting, PopulateDeepOptions, RelationalFilterOperators} from './types/crud';
 
 
+type Unarray<T> = T extends Array<infer U> ? U : T;
+
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   private httpClient: AxiosInstance;
   private normalizeData: boolean;
@@ -17,15 +19,19 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
     normalizeData: boolean,
     debug: boolean,
     private isNotUserContent: boolean,
+    private isSingle: boolean,
   ) {
     super(url);
     this.debug = debug;
     this.url = url;
     this.httpClient = axiosInstance;
     this.normalizeData = normalizeData;
+    this.isSingle = isSingle;
   }
 
-  async get(): Promise<StrapiApiResponse<T>> {
+  async get(): Promise<StrapiApiResponse<T>>;
+  async get(): Promise<StrapiApiResponse<Unarray<T>>>;
+  async get(): Promise<StrapiApiResponse<T | Unarray<T>>> {
     if (this.debug) {
       // eslint-disable-next-line no-console
       console.log(this.url);
@@ -35,15 +41,19 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
         this.httpClient
           .get<StrapiApiResponse<T>>(this.url)
           .then((res) => {
-            resolve(this.normalizeData ? this._returnDataHandler(res.data) : res.data);
+            const data = this.normalizeData ? this._returnDataHandler(res.data) : res.data;
+            if (this.isSingle && Array.isArray(data.data)) {
+              resolve({data: data.data[0], meta: data.meta});
+            } else {
+              resolve(data);
+            }
           })
           .catch((err) => {
             if (err) {
               resolve(this._returnErrorHandler(err));
             }
           });
-      }
-      if (!this.isNotUserContent) {
+      } else {
         this.httpClient
           .get<T>(this.url)
           .then((res) => {
