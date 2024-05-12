@@ -6,8 +6,6 @@ import {InferedTypeFromArray, PublicationState, StrapiApiResponse} from './types
 import {CrudSorting, PopulateDeepOptions, RelationalFilterOperators} from './types/crud';
 
 
-type Unarray<T> = T extends Array<infer U> ? U : T;
-
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   private httpClient: AxiosInstance;
   private normalizeData: boolean;
@@ -30,8 +28,8 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   }
 
   async get(): Promise<StrapiApiResponse<T>>;
-  async get(): Promise<StrapiApiResponse<Unarray<T>>>;
-  async get(): Promise<StrapiApiResponse<T | Unarray<T>>> {
+  async get(): Promise<StrapiApiResponse<InferedTypeFromArray<T>>>;
+  async get(): Promise<StrapiApiResponse<T | InferedTypeFromArray<T>>> {
     if (this.debug) {
       // eslint-disable-next-line no-console
       console.log(this.url);
